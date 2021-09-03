@@ -58,7 +58,7 @@ models:
             - not_null
 
 sources:
-  - name: sample_data
+  - name: sample_data_sf1
     database: snowflake_sample_data
     schema: tpch_sf1
     tables:
@@ -68,4 +68,14 @@ sources:
             tests:
               - unique
               - not_null
+      - name: c_mktsegment
+        tests:
+          - accepted_values:
+              values: ['BUILDING','AUTOMOBILE','HOUSEHOLD','FURNITURE','MACHINERY']
       - name: orders
+
+  - name: sample_data_sf001
+    database: snowflake_sample_data
+    schema: tpch_sf001
+    tables:
+      - name: customer

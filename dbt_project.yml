@@ -51,11 +51,12 @@ models:
         example:
             materialized: view
             pre-hook: "insert into dbt.audit(model, state, time) values('{{this.name}}','starting model deployment', current_timestamp)"
-        
+            tags: "example"
         new_model:
             schema: date
             materialized: view
             pre-hook: "insert into dbt.audit(model, state, time) values('{{this.name}}','starting model deployment', current_timestamp)"
+            tags: "new_model"
 vars:
     my_first_variable: True
     my_second_variable: 2

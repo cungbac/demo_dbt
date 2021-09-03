@@ -11,7 +11,8 @@
 -- {{ config(materialized='ephemeral') }}
 
 {{config(materialized='table', 
-        alias='first_model')}}
+        alias ='first_model',
+        tags = ['{{this}}','example']) }}
         -- post_hook='grant select on {{this}} to role analyst')}}
 
 -- with source_data as (
