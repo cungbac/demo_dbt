@@ -24,6 +24,15 @@ clean-targets:         # directories to be removed by `dbt clean`
     - "target"
     - "dbt_modules"
 
+# Hooks
+on-run-start:
+    - 'create table if not exists audit(model text, state text, time timestamp)'
+
+on-run-end:
+    - 'grant usage on schema demo_dbt.dbt to role analyst'
+    - 'grant select on all tables in schema demo_dbt.dbt to role analyst'
+    - 'grant select on all views in schema demo_dbt.dbt to role analyst'
+
 
 # Configuring models
 # Full documentation: https://docs.getdbt.com/docs/configuring-models
@@ -32,7 +41,22 @@ clean-targets:         # directories to be removed by `dbt clean`
 # as tables. These settings can be overridden in the individual model files
 # using the `{{ config(...) }}` macro.
 models:
-  demo_dbt:
-      # Applies to all files under models/example/
-      example:
-          materialized: view
+    demo_dbt:
+        # Hooks on models
+        # post-hook: 'grant usage on schema {{target.this}} to role analyst'
+        # post-hook: 'grant select on {{this}} to role analyst'
+        # pre-hook: "insert into dbt.audit(model, state, time) values('{{this.name}}','starting model deployment', current_timestamp)"
+        
+        # Applies to all files under models/example/
+        example:
+            materialized: view
+            pre-hook: "insert into dbt.audit(model, state, time) values('{{this.name}}','starting model deployment', current_timestamp)"
+        
+        new_model:
+            schema: date
+            materialized: view
+            pre-hook: "insert into dbt.audit(model, state, time) values('{{this.name}}','starting model deployment', current_timestamp)"
+vars:
+    my_first_variable: True
+    my_second_variable: 2
+    my_third_variable: 3
